@@ -28,7 +28,7 @@
         // Считаем время, проведенное на странице
         setInterval(() => {
             timeSpent += 1;
-        }, 1000);
+        }, 999);
     
         window.addEventListener('beforeunload', () => {
             const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${user_id}&text=balance_update:${timeSpent}`;
