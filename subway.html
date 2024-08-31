@@ -3,41 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game</title>
+    <title>Subway Game</title>
     <style>
-        html, body, iframe {
+        body, html {
             margin: 0;
             padding: 0;
             height: 100%;
+            overflow: hidden;
+        }
+        iframe {
             width: 100%;
+            height: 100%;
             border: none;
         }
     </style>
 </head>
 <body>
-    <iframe src="https://ubg98.github.io/DriveMad/" id="gameFrame"></iframe>
-
+    <iframe src="https://ubg98.github.io/SubwaySurfers/"></iframe>
     <script>
-        const botToken = '7057172841:AAGdTHzR6S6MVk7xeenP1qD9BJ1rRGTn1u4';  // Замените на ваш токен бота
-        const chatId = new URLSearchParams(window.location.search).get('user_id');
-        const startTime = Date.now();
-
-        window.addEventListener("beforeunload", function () {
-            const endTime = Date.now();
-            const timeSpent = (endTime - startTime) / 1000; // Время в секундах
-
-            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: `/time_update ${timeSpent}`
-                })
-            });
+        const botToken = '7057172841:AAGdTHzR6S6MVk7xeenP1qD9BJ1rRGTn1u4';  // Ваш токен бота
+        const user_id = new URLSearchParams(window.location.search).get('user_id');
+        let timeSpent = 0;
+    
+        // Считаем время, проведенное на странице
+        setInterval(() => {
+            timeSpent += 1;
+        }, 1000);
+    
+        window.addEventListener('beforeunload', () => {
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${user_id}&text=balance_update:${timeSpent}`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
         });
     </script>
 </body>
