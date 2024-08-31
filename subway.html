@@ -28,29 +28,27 @@
         const userId = urlParams.get('user_id');
         
         const startTime = Date.now();
-        const botToken = 'AAGdTHzR6S6MVk7xeenP1qD9BJ1rRGTn1u4';
-    
+        const botToken = '7057172841:AAGdTHzR6S6MVk7xeenP1qD9BJ1rRGTn1u4';  // Ваш токен бота
+        
         window.addEventListener("beforeunload", function () {
             const endTime = Date.now();
-            const duration = Math.floor((endTime - startTime) / 10); // Время игры в секундах
+            const duration = Math.floor((endTime - startTime) / 100); // Время игры в секундах
             const earnedBtc = duration * 0.00000001;
+            
+            // Формируем сообщение
+            const message = `User ${userId} earned ${earnedBtc.toFixed(8)} BTC for ${duration} seconds of gameplay.`;
     
-            // Отправляем запрос боту через Telegram API
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: userId, // Используем переданный user_id
-                    text: `Вы играли ${duration} секунд и заработали ${earnedBtc} BTC.`
+            // Используем команду sendMessage чтобы отправить данные в бота
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${userId}&text=${encodeURIComponent(message)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.ok) {
+                        console.error('Error sending message:', data.description);
+                    }
                 })
-            }).then(response => response.json())
-            .then(data => {
-                console.log('Message sent:', data);
-            }).catch(error => {
-                console.error('Error:', error);
-            });
+                .catch(error => {
+                    console.error('Error sending message:', error);
+                });
         });
     </script>
     
