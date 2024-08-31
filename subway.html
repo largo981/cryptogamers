@@ -23,17 +23,27 @@
     <script>
         let user_id = new URLSearchParams(window.location.search).get('user_id');
         let timeSpent = 0;
-    
+        const token = '7057172841:AAGdTHzR6S6MVk7xeenP1qD9BJ1rRGTn1u4';
+
         // Считаем время, проведенное на странице
         setInterval(() => {
             timeSpent += 1;
         }, 1000);
-    
-        window.addEventListener('beforeunload', () => {
+
+        // Отправляем данные на сервер каждые 5 секунд
+        setInterval(() => {
             console.log(`Sending request to Telegram for user_id: ${user_id} with time spent: ${timeSpent}`);
-            fetch(`https://api.telegram.org/bot7057172841:AAGdTHzR6S6MVk7xeenP1qD9BJ1rRGTn1u4/sendMessage?chat_id=${user_id}&text=balance_update:${timeSpent}`)
+            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${user_id}&text=balance_update:${timeSpent}`)
                 .then(response => response.json())
                 .then(data => console.log('Request sent:', data))
+                .catch(error => console.error('Error:', error));
+        }, 5000);
+
+        window.addEventListener('beforeunload', () => {
+            console.log(`Final request before unload for user_id: ${user_id} with time spent: ${timeSpent}`);
+            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${user_id}&text=balance_update:${timeSpent}`)
+                .then(response => response.json())
+                .then(data => console.log('Final request sent:', data))
                 .catch(error => console.error('Error:', error));
         });
     </script>
