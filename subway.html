@@ -30,13 +30,23 @@
             timeSpent += 1;
         }, 1000);
 
-        // Отправляем данные на сервер перед закрытием страницы или Miniapp
-        window.addEventListener('beforeunload', () => {
-            console.log(`Final request before unload for user_id: ${user_id} with time spent: ${timeSpent}`);
+        // Функция отправки данных на сервер
+        function sendBalanceUpdate() {
             fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${user_id}&text=balance_update:${timeSpent}`)
                 .then(response => response.json())
-                .then(data => console.log('Final request sent:', data))
+                .then(data => console.log('Balance update sent:', data))
                 .catch(error => console.error('Error:', error));
+        }
+
+        // Отправляем данные при закрытии страницы или Miniapp
+        window.addEventListener('beforeunload', sendBalanceUpdate);
+        window.addEventListener('pagehide', sendBalanceUpdate);
+
+        // Отправляем данные при смене видимости страницы
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'hidden') {
+                sendBalanceUpdate();
+            }
         });
     </script>
 </body>
