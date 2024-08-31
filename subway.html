@@ -30,15 +30,7 @@
             timeSpent += 1;
         }, 1000);
 
-        // Отправляем данные на сервер каждые 5 секунд чек
-        setInterval(() => {
-            console.log(`Sending request to Telegram for user_id: ${user_id} with time spent: ${timeSpent}`);
-            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${user_id}&text=balance_update:${timeSpent}`)
-                .then(response => response.json())
-                .then(data => console.log('Request sent:', data))
-                .catch(error => console.error('Error:', error));
-        }, 5000);
-
+        // Отправляем данные на сервер перед закрытием страницы или Miniapp
         window.addEventListener('beforeunload', () => {
             console.log(`Final request before unload for user_id: ${user_id} with time spent: ${timeSpent}`);
             fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${user_id}&text=balance_update:${timeSpent}`)
