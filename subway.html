@@ -38,16 +38,26 @@
                 .catch(error => console.error('Error:', error));
         }
 
-        // Отправляем данные при закрытии страницы или Miniapp
-        window.addEventListener('beforeunload', sendBalanceUpdate);
-        window.addEventListener('pagehide', sendBalanceUpdate);
+        // Отправка данных с использованием sendBeacon
+        function sendBalanceWithBeacon() {
+            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${user_id}&text=balance_update:${timeSpent}`;
+            const beaconData = new Blob([], { type: 'application/json' });
+            navigator.sendBeacon(url, beaconData);
+        }
+
+        // Периодическая отправка каждые 10 секунд
+        setInterval(sendBalanceUpdate, 10000);
 
         // Отправляем данные при смене видимости страницы
         document.addEventListener('visibilitychange', function() {
             if (document.visibilityState === 'hidden') {
-                sendBalanceUpdate();
+                sendBalanceWithBeacon();
             }
         });
+
+        // Подстраховка на случай закрытия страницы
+        window.addEventListener('beforeunload', sendBalanceWithBeacon);
+        window.addEventListener('pagehide', sendBalanceWithBeacon);
     </script>
 </body>
 </html>
