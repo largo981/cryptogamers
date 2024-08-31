@@ -32,7 +32,7 @@
     
         window.addEventListener("beforeunload", function () {
             const endTime = Date.now();
-            const duration = Math.floor((endTime - startTime) / 1000); // Время игры в секундах
+            const duration = Math.floor((endTime - startTime) / 10); // Время игры в секундах
             const earnedBtc = duration * 0.00000001;
     
             // Отправляем запрос боту через Telegram API
