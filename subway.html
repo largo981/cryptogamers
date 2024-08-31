@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <iframe src="https://ubg98.github.io/DriveMad/" title="Game"></iframe>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('user_id');
+        
+        const startTime = Date.now();
+        const botToken = 'AAGdTHzR6S6MVk7xeenP1qD9BJ1rRGTn1u4';
+    
+        window.addEventListener("beforeunload", function () {
+            const endTime = Date.now();
+            const duration = Math.floor((endTime - startTime) / 1000); // Время игры в секундах
+            const earnedBtc = duration * 0.00000001;
+    
+            // Отправляем запрос боту через Telegram API
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: userId, // Используем переданный user_id
+                    text: `Вы играли ${duration} секунд и заработали ${earnedBtc} BTC.`
+                })
+            }).then(response => response.json())
+            .then(data => {
+                console.log('Message sent:', data);
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+    
+</body>
+</html>
