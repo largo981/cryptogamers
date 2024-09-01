@@ -23,7 +23,7 @@
     <script>
         let user_id = new URLSearchParams(window.location.search).get('user_id');
         let timeSpent = 0;
-        const token = '7057172841:AAGdTHzR6S6MVk7xeenP1qD9BJ1rRGTn1u4';
+        const NGROK = 'https://1fc0-85-174-192-113.ngrok-free.app';
 
         // Считаем время, проведенное на странице
         setInterval(() => {
@@ -32,16 +32,22 @@
 
         // Функция отправки данных на сервер
         function sendBalanceUpdate() {
-            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${user_id}&text=balance_update:${timeSpent}`)
-                .then(response => response.json())
-                .then(data => console.log('Balance update sent:', data))
-                .catch(error => console.error('Error:', error));
+            fetch(`${NGROK}/update_balance`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user_id: user_id, time_spent: timeSpent }),
+            })
+            .then(response => response.json())
+            .then(data => console.log('Balance update sent:', data))
+            .catch(error => console.error('Error:', error));
         }
 
         // Отправка данных с использованием sendBeacon
         function sendBalanceWithBeacon() {
-            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${user_id}&text=balance_update:${timeSpent}`;
-            const beaconData = new Blob([], { type: 'application/json' });
+            const url = `${NGROK}/update_balance`;
+            const beaconData = new Blob([JSON.stringify({ user_id: user_id, time_spent: timeSpent })], { type: 'application/json' });
             navigator.sendBeacon(url, beaconData);
         }
 
