@@ -17,35 +17,31 @@
             border: none;
         }
     </style>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <!-- Подключение библиотеки Telegram Web Apps -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
     <iframe src="https://ubg98.github.io/SubwaySurfers/"></iframe>
-    
     <script>
-        Telegram.WebApp.ready(); // Сообщаем Telegram, что приложение готово
-        
-        let user_id = Telegram.WebApp.initDataUnsafe.user.id;
+        let user_id = new URLSearchParams(window.location.search).get('user_id');
         let timeSpent = 0;
-
+        const tg = window.Telegram.WebApp;
+        
         // Считаем время, проведенное на странице
         setInterval(() => {
             timeSpent += 1;
         }, 1000);
 
-        // Функция отправки данных напрямую в бота через Telegram API
+        // Функция отправки данных на сервер через Web App API
         function sendBalanceUpdate() {
-            const balanceUpdate = `balance_update:${timeSpent}`;
-            Telegram.WebApp.sendData(balanceUpdate);
+            tg.sendData(`balance_update:${timeSpent}`);
         }
 
-        // Отправляем данные при закрытии или смене видимости
-        Telegram.WebApp.onEvent('viewportChanged', () => sendBalanceUpdate());
-        Telegram.WebApp.onEvent('mainButtonClicked', () => sendBalanceUpdate());
+        // Подстраховка на случай закрытия страницы
         window.addEventListener('beforeunload', sendBalanceUpdate);
         window.addEventListener('pagehide', sendBalanceUpdate);
+
+        // Отправка данных каждые 5 секунд
+        setInterval(sendBalanceUpdate, 5000);
     </script>
 </body>
 </html>
