@@ -36,6 +36,12 @@
             tg.sendData(JSON.stringify({user_id: user_id, time_spent: timeSpent}));
         }
 
+        function sendBalanceUpdate() {
+            const data = JSON.stringify({user_id: user_id, time_spent: timeSpent});
+            console.log(`Sending data: ${data}`);
+            tg.sendData(data);
+        }
+
         // Отправка данных при закрытии страницы
         window.addEventListener('beforeunload', sendBalanceUpdate);
         window.addEventListener('pagehide', sendBalanceUpdate);
