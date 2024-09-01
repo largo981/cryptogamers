@@ -1,0 +1,22 @@
+{
+    "en": {
+        "start_message": "Welcome to Cryptogamers! Use /menu to navigate the bot.",
+        "menu_message": "Here is the main menu. Choose an option:",
+        "random_game_button": "Random Game",
+        "balance_button": "My Balance",
+        "random_game_message": "Here is a random game for you:",
+        "balance_message": "Your current balance is: {balance} ₮",
+        "no_games_available": "No games available at the moment.",
+        "referral_message": "Invite friends and earn bonuses!"
+    },
+    "ru": {
+        "start_message": "Добро пожаловать в Cryptogamers! Используйте /menu для навигации по боту.",
+        "menu_message": "Вот главное меню. Выберите опцию:",
+        "random_game_button": "Случайная игра",
+        "balance_button": "Мой баланс",
+        "random_game_message": "Вот случайная игра для вас:{game_name}",
+        "balance_message": "Ваш текущий баланс: {balance} ₮",
+        "no_games_available": "На данный момент нет доступных игр.",
+        "referral_message": "Пригласите друзей и получайте бонусы!"
+    }
+}
