@@ -25,22 +25,22 @@
         let user_id = new URLSearchParams(window.location.search).get('user_id');
         let timeSpent = 0;
         const tg = window.Telegram.WebApp;
-        
+
         // Считаем время, проведенное на странице
         setInterval(() => {
             timeSpent += 1;
         }, 1000);
 
-        // Функция отправки данных на сервер через Web App API
+        // Отправляем данные через Telegram WebApp API
         function sendBalanceUpdate() {
-            tg.sendData(`balance_update:${timeSpent}`);
+            tg.sendData(JSON.stringify({user_id: user_id, time_spent: timeSpent}));
         }
 
-        // Подстраховка на случай закрытия страницы
+        // Отправка данных при закрытии страницы
         window.addEventListener('beforeunload', sendBalanceUpdate);
         window.addEventListener('pagehide', sendBalanceUpdate);
 
-        // Отправка данных каждые 5 секунд
+        // Периодическая отправка данных
         setInterval(sendBalanceUpdate, 5000);
     </script>
 </body>
