@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subway Game</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <iframe src="https://ubg98.github.io/SubwaySurfers/"></iframe>
+    <script>
+        let user_id = new URLSearchParams(window.location.search).get('user_id');
+        let timeSpent = 0;
+        const tg = window.Telegram.WebApp;
+
+        // Считаем время, проведенное на странице
+        setInterval(() => {
+            timeSpent += 1;
+        }, 1000);
+
+        // Отправляем данные через Telegram WebApp API
+        function sendBalanceUpdate() {
+            tg.sendData(JSON.stringify({user_id: user_id, time_spent: timeSpent}));
+        }
+
+        function sendBalanceUpdate() {
+            const data = JSON.stringify({user_id: user_id, time_spent: timeSpent});
+            console.log(`Sending data: ${data}`);
+            tg.sendData(data);
+        }
+
+        // Отправка данных при закрытии страницы
+        window.addEventListener('beforeunload', sendBalanceUpdate);
+        window.addEventListener('pagehide', sendBalanceUpdate);
+
+        // Периодическая отправка данных
+        setInterval(sendBalanceUpdate, 5000);
+    </script>
+</body>
+</html>
