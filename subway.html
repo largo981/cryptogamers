@@ -19,42 +19,31 @@
     </style>
 </head>
 <body>
+    <!-- Подключение библиотеки Telegram Web Apps -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
     <iframe src="https://ubg98.github.io/SubwaySurfers/"></iframe>
+    
     <script>
-        let user_id = new URLSearchParams(window.location.search).get('user_id');
+        Telegram.WebApp.ready(); // Сообщаем Telegram, что приложение готово
+        
+        let user_id = Telegram.WebApp.initDataUnsafe.user.id;
         let timeSpent = 0;
-        const ngrokUrl = 'https://abf2-85-174-192-113.ngrok-free.app/update_balance';
 
         // Считаем время, проведенное на странице
         setInterval(() => {
             timeSpent += 1;
         }, 1000);
 
-        // Функция отправки данных на сервер
+        // Функция отправки данных напрямую в бота через Telegram API
         function sendBalanceUpdate() {
-            fetch(ngrokUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    user_id: user_id,
-                    time_spent: timeSpent
-                })
-            })
-            .then(response => response.json())
-            .then(data => console.log('Balance update sent:', data))
-            .catch(error => console.error('Error:', error));
+            const balanceUpdate = `balance_update:${timeSpent}`;
+            Telegram.WebApp.sendData(balanceUpdate);
         }
 
-        // Отправляем данные при смене видимости страницы
-        document.addEventListener('visibilitychange', function() {
-            if (document.visibilityState === 'hidden') {
-                sendBalanceUpdate();
-            }
-        });
-
-        // Подстраховка на случай закрытия страницы
+        // Отправляем данные при закрытии или смене видимости
+        Telegram.WebApp.onEvent('viewportChanged', () => sendBalanceUpdate());
+        Telegram.WebApp.onEvent('mainButtonClicked', () => sendBalanceUpdate());
         window.addEventListener('beforeunload', sendBalanceUpdate);
         window.addEventListener('pagehide', sendBalanceUpdate);
     </script>
