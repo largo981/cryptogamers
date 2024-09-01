@@ -23,7 +23,7 @@
     <script>
         let user_id = new URLSearchParams(window.location.search).get('user_id');
         let timeSpent = 0;
-        const NGROK = 'https://abf2-85-174-192-113.ngrok-free.app';
+        const ngrokUrl = 'https://abf2-85-174-192-113.ngrok-free.app/update_balance';
 
         // Считаем время, проведенное на странице
         setInterval(() => {
@@ -32,38 +32,31 @@
 
         // Функция отправки данных на сервер
         function sendBalanceUpdate() {
-            fetch(`${NGROK}/update_balance`, {
+            fetch(ngrokUrl, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ user_id: user_id, time_spent: timeSpent }),
+                body: JSON.stringify({
+                    user_id: user_id,
+                    time_spent: timeSpent
+                })
             })
             .then(response => response.json())
             .then(data => console.log('Balance update sent:', data))
             .catch(error => console.error('Error:', error));
         }
 
-        // Отправка данных с использованием sendBeacon
-        function sendBalanceWithBeacon() {
-            const url = `${NGROK}/update_balance`;
-            const beaconData = new Blob([JSON.stringify({ user_id: user_id, time_spent: timeSpent })], { type: 'application/json' });
-            navigator.sendBeacon(url, beaconData);
-        }
-
-        // Периодическая отправка каждые 10 секунд
-        setInterval(sendBalanceUpdate, 10000);
-
         // Отправляем данные при смене видимости страницы
         document.addEventListener('visibilitychange', function() {
             if (document.visibilityState === 'hidden') {
-                sendBalanceWithBeacon();
+                sendBalanceUpdate();
             }
         });
 
         // Подстраховка на случай закрытия страницы
-        window.addEventListener('beforeunload', sendBalanceWithBeacon);
-        window.addEventListener('pagehide', sendBalanceWithBeacon);
+        window.addEventListener('beforeunload', sendBalanceUpdate);
+        window.addEventListener('pagehide', sendBalanceUpdate);
     </script>
 </body>
 </html>
