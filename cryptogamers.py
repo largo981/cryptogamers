@@ -6,7 +6,7 @@ from db_manager import DBManager
 from screens_manager import show_welcome_screen, show_random_game_screen, show_balance_screen, invite_friends_screen
 
 # Настраиваем логирование
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelень)s - %(message)s', level=logging.INFO)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Создаем экземпляр DBManager
@@ -16,6 +16,9 @@ db_manager = DBManager()
 with open('bio.json', 'r') as config_file:
     config = json.load(config_file)
     bot_token = config['bot_token']
+
+# Создаем объект Application глобально
+application = Application.builder().token(bot_token).build()
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Отправляем приветственное сообщение и регистрируем пользователя"""
@@ -55,16 +58,13 @@ async def random_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def main():
     """Запуск бота"""
-    # Создаем объект Application и передаем ему токен бота из bio.json
-    application = Application.builder().token(bot_token).build()
-
     # Регистрируем обработчики команд
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("menu", menu))
     application.add_handler(CommandHandler("balance", balance))
     application.add_handler(CommandHandler("random_game", random_game))
 
-    # Запускаем бота
+    # Запуск бота
     application.run_polling()
 
 if __name__ == '__main__':

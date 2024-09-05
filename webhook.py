@@ -1,7 +1,7 @@
 import logging
 from flask import Flask, request, abort
 from telegram import Update
-from cryptogamers import application, TOKEN
+from cryptogamers import application, bot_token as TOKEN
 
 app = Flask(__name__)
 
