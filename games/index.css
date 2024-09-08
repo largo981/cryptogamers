@@ -197,3 +197,40 @@
 .refresh-icon img:hover {
     transform: rotate(90deg);  /* Небольшой эффект при наведении */
 }
+
+.loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #202225;
+    z-index: 9999; /* Лоадер должен быть на переднем плане */
+    transition: opacity 0.5s ease-out;  /* Плавное исчезновение loader */
+  }
+  
+  .main-logo-icon {
+    width: 200px;  /* Размер логотипа */
+    height: auto;
+    margin-bottom: 20px;  /* Отступ между логотипом и анимацией */
+  }
+  
+  .loading {
+    width: 100px;
+    height: 100px;
+  }
+  
+  /* Обычный контент страницы, скрываем его пока loader активен */
+  .content {
+    display: none; /* Контент изначально скрыт */
+  }
+  
+  /* Показать контент, когда loader исчезнет */
+  body.loaded .content {
+    display: block;
+  }
+  

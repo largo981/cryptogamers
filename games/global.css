@@ -4,6 +4,10 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+    overflow: hidden; /* Предотвращаем прокрутку страницы во время загрузки */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-family: 'Oxanium', sans-serif;  /* Возвращаем шрифты */
     background-color: #202225;  /* Фон для всего проекта */
     color: #fff;  /* Основной цвет текста */

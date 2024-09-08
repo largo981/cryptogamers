@@ -1,6 +1,7 @@
 let previousGames = [];  // Для хранения индексов предыдущего обновления
 let games;  // Храним данные об играх вне функции для повторного использования
 let preloadedImages = [];  // Храним предварительно загруженные изображения
+const emptyImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/0GtWfgAAAAASUVORK5CYII=";  // Пустая картинка
 
 // Подгружаем данные из JSON
 async function fetchWizardData() {
@@ -20,14 +21,32 @@ function getRandomUniqueIndex(arr, usedIndices) {
     return randomIndex;
 }
 
-// Заменяем изображения на случайные картинки и добавляем кликабельность
+// Функция для отображения экрана загрузки
+function showLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
+}
+
+// Функция для скрытия экрана загрузки
+function hideLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.transition = 'opacity 0.5s ease-out';
+    loader.style.opacity = '0';
+    setTimeout(() => {
+        loader.style.display = 'none';
+        document.body.classList.add('loaded');
+    }, 500);
+}
+
+// Функция для замены изображений на случайные картинки и добавления кликабельности
 async function replaceImages() {
-    games = await fetchWizardData();
     const images = document.querySelectorAll('.game-section .game-icon img');
-    
     const usedIndices = [];  // Массив для хранения уже использованных индексов
 
-    images.forEach((img) => {
+    images.forEach((img, index) => {
+        // Устанавливаем сразу пустую картинку
+        img.src = emptyImage;
+
         // Получаем случайный индекс игры, которая ещё не была выбрана
         const randomIndex = getRandomUniqueIndex(games, usedIndices);
         const randomGame = games[randomIndex];
@@ -44,11 +63,10 @@ async function replaceImages() {
             };
 
             newImg.onerror = () => {
-                img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/0GtWfgAAAAASUVORK5CYII=";
+                img.src = emptyImage;
             };
         }
 
-        // Добавляем событие клика, чтобы при нажатии открыть iframe
         img.addEventListener('click', () => {
             openGameInIframe(gameUrl);
         });
@@ -79,7 +97,7 @@ function preloadNewIcons() {
 function observeImages() {
     const images = document.querySelectorAll('.game-section .game-icon img');
 
-    const observer = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const img = entry.target;
@@ -94,37 +112,6 @@ function observeImages() {
     images.forEach(img => observer.observe(img));
 }
 
-// Функция для обновления иконок при клике на refresh
-function updateGameIcons() {
-    const images = document.querySelectorAll('.game-section .game-icon img');
-    
-    const usedIndices = [...previousGames];  // Копируем предыдущие индексы для исключения повторов
-    previousGames = [];  // Обнуляем для нового обновления
-
-    images.forEach((img) => {
-        const randomIndex = getRandomUniqueIndex(games, usedIndices);
-        const randomGame = games[randomIndex];
-        const image512x512 = randomGame.Assets.find(asset => asset.includes('512x512'));
-        const gameUrl = randomGame['Game URL'];
-
-        if (image512x512) {
-            const newImg = new Image();
-            newImg.src = image512x512;
-
-            newImg.onload = () => {
-                img.src = image512x512;
-                img.dataset.gameUrl = gameUrl;
-            };
-
-            newImg.onerror = () => {
-                img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/0GtWfgAAAAASUVORK5CYII=";
-            };
-        }
-
-        previousGames.push(randomIndex);  // Сохраняем новый индекс для отслеживания повторов
-    });
-}
-
 // Функция для открытия игры в iframe
 function openGameInIframe(gameUrl) {
     const gameSection = document.querySelector('.game-section');
@@ -136,7 +123,6 @@ function openGameInIframe(gameUrl) {
         </div>
     `;
 
-    // Применяем стили для растягивания iframe на всю ширину и высоту блока game-section
     gameSection.style.display = 'block';
     gameSection.style.height = '100%';
 }
@@ -148,21 +134,27 @@ function exitGamePlayer() {
     gameSection.style.display = '';  // Возвращаем отображение иконок
     gameSection.style.height = '';  // Сбрасываем высоту
 
-    // Заполняем новый набор иконок из предварительно загруженных данных
     preloadedImages.forEach((preloaded, index) => {
         const gameIcon = document.createElement('div');
         gameIcon.className = 'game-icon';
         const img = document.createElement('img');
-        img.src = preloaded.img.src;
+        img.src = emptyImage;  // Показываем пустую картинку сначала
         img.dataset.gameUrl = preloaded.gameUrl;
 
         gameIcon.appendChild(img);
         gameSection.appendChild(gameIcon);
 
+        // Подгружаем изображение при полной загрузке
+        preloaded.img.onload = () => {
+            img.src = preloaded.img.src;
+        };
+
         img.addEventListener('click', () => {
             openGameInIframe(preloaded.gameUrl);
         });
     });
+
+    preloadNewIcons();  // Подгружаем следующий набор после выхода из game-player
 }
 
 // Добавляем событие на кнопку обновления
@@ -170,26 +162,56 @@ function addRefreshButtonListener() {
     const refreshButton = document.getElementById('refresh-btn');
 
     refreshButton.addEventListener('click', () => {
-        // Применяем анимацию к кнопке обновления
         refreshButton.style.transform = 'rotate(360deg)';
         setTimeout(() => {
             refreshButton.style.transform = 'rotate(0deg)';
         }, 300);
 
-        // Проверяем, находимся ли мы в состоянии game-player
         const gamePlayer = document.querySelector('.game-player');
         if (gamePlayer) {
-            exitGamePlayer();  // Возвращаемся в состояние с иконками
+            exitGamePlayer();
         } else {
-            updateGameIcons();  // Обновляем иконки в game-section
+            updateGameIcons();
         }
     });
 }
 
+// Функция для обновления иконок при клике на refresh
+function updateGameIcons() {
+    const images = document.querySelectorAll('.game-section .game-icon img');
+    
+    const usedIndices = [...previousGames];  // Копируем предыдущие индексы для исключения повторов
+    previousGames = [];  // Обнуляем для нового обновления
+
+    images.forEach((img, index) => {
+        img.src = emptyImage;  // Показываем сразу пустую картинку
+        const preloaded = preloadedImages[index];
+        if (preloaded) {
+            const newImg = new Image();
+            newImg.src = preloaded.img.src;
+
+            newImg.onload = () => {
+                img.src = preloaded.img.src;
+                img.dataset.gameUrl = preloaded.gameUrl;
+            };
+
+            newImg.onerror = () => {
+                img.src = emptyImage;  // Возвращаемся к пустой картинке, если ошибка
+            };
+
+            previousGames.push(preloaded);
+        }
+    });
+
+    preloadNewIcons();  // Загружаем следующий набор иконок для быстрого обновления
+}
+
 // Запускаем подгрузку при загрузке страницы
 window.onload = async () => {
+    showLoader();  // Показываем лоадер
     await fetchWizardData();
     replaceImages();
     observeImages();
     addRefreshButtonListener();  // Добавляем обработку клика по кнопке обновления
+    hideLoader();  // Убираем лоадер после загрузки данных
 };
