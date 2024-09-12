@@ -1,5 +1,3 @@
-
-
 .avatar-group-icon {
     position: absolute;
     top: 0px;
@@ -8,6 +6,7 @@
     height: 60px;
     overflow: hidden;
 }
+
 .level-border-icon {
     position: absolute;
     height: 95.83%;
@@ -21,6 +20,7 @@
     overflow: hidden;
     max-height: 100%;
 }
+
 .div {
     position: absolute;
     top: calc(50% - 10.5px);
@@ -28,6 +28,7 @@
     line-height: 22px;
     font-weight: 600;
 }
+
 .level {
     position: absolute;
     top: 36px;
@@ -36,16 +37,19 @@
     height: 24px;
     overflow: hidden;
 }
+
 .avatar-level {
     width: 64px;
     position: relative;
     height: 60px;
 }
+
 .nickname {
     position: relative;
     line-height: 28px;
     font-weight: 600;
 }
+
 .pack-icon {
     width: 16px;
     position: relative;
@@ -53,11 +57,13 @@
     overflow: hidden;
     flex-shrink: 0;
 }
+
 .div1 {
     position: relative;
     line-height: 20px;
     font-weight: 600;
 }
+
 .statsthird {
     display: flex;
     flex-direction: row;
@@ -65,6 +71,7 @@
     justify-content: flex-start;
     gap: 4px;
 }
+
 .stats {
     display: flex;
     flex-direction: row;
@@ -73,10 +80,10 @@
     gap: 16px;
     font-size: 12px;
 }
+
 .param-group {
     align-self: stretch;
-    width: 200px;
-    height:56px;
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -85,152 +92,193 @@
     text-align: left;
     font-size: 20px;
 }
-.gameimage-icon {
-    width: 100px;
-    position: relative;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 1px 3px rgba(93, 107, 132, 0.18), 0px 6px 6px rgba(93, 107, 132, 0.15), 0px 13px 8px rgba(93, 107, 132, 0.09);
-    border-radius: 8px;
-    background-color: rgba(255, 255, 255, 0);
-    height: 100px;
-    overflow: hidden;
-    flex-shrink: 0;
-    object-fit: cover;
-}
-.game-icon {
-    width: 100px;
-    position: relative;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 1px 3px rgba(93, 107, 132, 0.18), 0px 6px 6px rgba(93, 107, 132, 0.15), 0px 13px 8px rgba(93, 107, 132, 0.09);
-    border-radius: 8px;
-    background-color: rgba(255, 255, 255, 0);
-    height: 100px;
-    overflow: hidden;
-    flex-shrink: 0;
-}
-.game-icon img {
-    width: 100%;  /* Ширина изображения равна ширине контейнера */
-    height: 100%;  /* Высота изображения равна высоте контейнера */
-    object-fit: cover;  /* Изображение вписывается в контейнер, сохраняя пропорции */
-    border-radius: 10px;  /* Добавим сглаженные края, если нужно */
-}
-.quests-icon {
-    width: 24px;
-    position: relative;
-    height: 24px;
-    object-fit: cover;
-}
-.cards-icon {
-    width: 24px;
-    position: relative;
-    height: 24px;
-}
 
-.sceen-1 {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100vh;  /* Высота экрана */
-    background-color: #202225;
-}
 .top {
     align-self: stretch;
-    height: max-content;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 1px 3px rgba(93, 107, 132, 0.18), 0px 6px 6px rgba(93, 107, 132, 0.15), 0px 13px 8px rgba(93, 107, 132, 0.09);
+    background-color: #202225;
     overflow: hidden;
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     justify-content: flex-start;
-    padding: 5px 16px 10px 16px;
+    padding: 5px 16px;
     gap: 12px;
 }
-.game-section {
-    width: 100%;
-    height: 100%;
+
+.game-name {
     position: relative;
+    line-height: 24px;
+    font-weight: 600;
+}
+
+.category {
+    position: relative;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 600;
+}
+
+.cube {
+    width: 150px;
+    height: 150px;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(0deg) rotateY(0deg);
+    transition: transform 3s ease;
+}
+
+@keyframes spinAndLift {
+    0% {
+        transform: rotateY(0deg) translateY(0px);
+    }
+    50% {
+        transform: rotateY(180deg) translateY(-50px); /* Подъем на 50px */
+    }
+    100% {
+        transform: rotateY(360deg) translateY(0px); /* Возврат в исходное положение */
+    }
+}
+
+/* Анимация для кубика */
+.cube.animate {
+    animation: spinAndLift 1.5s ease-out forwards;
+}
+
+.face {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-content: center;
-    padding: 10px;
-    box-sizing: border-box;
-    gap: 10px 20px;
-}
-.game-section, .game-player {
-    width: 100%;
-    padding: 0;  /* Убираем отступы в состоянии game-player */
-}
-.game-player {
-    width: 100%;
-    height: 100%;  /* Занимаем всю высоту родительского блока */
-    display: flex;
     justify-content: center;
     align-items: center;
+
 }
 
-.game-player iframe {
-    width: 100%;
-    height: 100%;  /* Растягиваем iframe по ширине и высоте контейнера */
-    border: none;  /* Убираем рамку */
-}
-.bottom {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 16px;
-    box-sizing: border-box;
-    gap: 30px;
-}
-
-.refresh-icon {
-    margin-left: auto;
-    cursor: pointer;
-}
-
-.refresh-icon img {
-    width: 48px;
-    height: 48px;
-    transition: transform 0.3s ease;
-}
-
-.refresh-icon img:hover {
-    transform: rotate(90deg);  /* Небольшой эффект при наведении */
-}
-
-.loader {
-    position: fixed;
-    top: 0;
-    left: 0;
+.face img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
+}
+
+.front {
+    transform: rotateY(0deg) translateZ(75px);
+}
+
+.back {
+    transform: rotateY(180deg) translateZ(75px);
+}
+
+.right {
+    transform: rotateY(90deg) translateZ(75px);
+}
+
+.left {
+    transform: rotateY(-90deg) translateZ(75px);
+}
+
+.up {
+    transform: rotateX(90deg) translateZ(75px);
+}
+
+.down {
+    transform: rotateX(-90deg) translateZ(75px);
+}
+
+.loading-icon {
+    position: absolute;
+    bottom: 20px;
+    cursor: pointer;
+    transition: transform 0.5s;
+}
+
+.loading-icon:hover {
+    transform: rotate(360deg);
+}
+
+.grade {
+    position: relative;
+    font-size: 12px;
+    line-height: 20px;
+    font-weight: 600;
+}
+
+.spin {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+}
+
+.loading-icon {
+    width: 48px;
+    position: relative;
+    height: 48px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.game-section {
+    align-self: stretch;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 10px;
+    gap: 50px;
+    text-align: left;
+    font-size: 16px;
+}
+
+.cards-icon {
+    align-self: stretch;
+    flex: 1;
+    position: relative;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+}
+
+.quests-icon {
+    align-self: stretch;
+    flex: 1;
+    position: relative;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.bottom {
+    width: 360px;
+    box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.25), 0px -1px 3px rgba(93, 107, 132, 0.18), 0px -6px 6px rgba(93, 107, 132, 0.15), 0px -13px 8px rgba(93, 107, 132, 0.09);
     background-color: #202225;
-    z-index: 9999; /* Лоадер должен быть на переднем плане */
-    transition: opacity 0.5s ease-out;  /* Плавное исчезновение loader */
-  }
-  
-  .main-logo-icon {
-    width: 200px;  /* Размер логотипа */
-    height: auto;
-    margin-bottom: 20px;  /* Отступ между логотипом и анимацией */
-  }
-  
-  .loading {
-    width: 100px;
-    height: 100px;
-  }
-  
-  /* Обычный контент страницы, скрываем его пока loader активен */
-  .content {
-    display: none; /* Контент изначально скрыт */
-  }
-  
-  /* Показать контент, когда loader исчезнет */
-  body.loaded .content {
-    display: block;
-  }
-  
+    height: 70px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px 16px;
+    box-sizing: border-box;
+    gap: 20px;
+}
+
+.main {
+    width: 100%;
+    position: relative;
+    background-color: #202225;
+    height: 570px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+    font-family: Oxanium;
+}
